@@ -20,11 +20,15 @@ module.exports.initialize = (queue) => {
 // }
 
 module.exports.router = (req, res, next = ()=>{}) => {
-  console.log('Serving request type ' + req.method + ' for url ' + req.url);
+  // console.log('Serving request type ' + req.method + ' for url ' + req.url);
   res.writeHead(200, headers);
   if (req.method === 'GET') {
     // res.write(generateRandomCommand());
-    res.write(messagesQueue.dequeue() || ' ');
+    var cmd = messagesQueue.dequeue();
+    if (cmd) {
+      console.log(`Responding to GET request with cmd: ${cmd}`);
+      res.write(cmd);
+    }
   }
   res.end();
   next(); // invoke next() at the end of a request to help with testing!
